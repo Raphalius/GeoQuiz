@@ -1,6 +1,9 @@
 package com.bignerdranch.android.geoquiz
 
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -14,34 +17,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.bignerdranch.android.geoquiz.ui.theme.GeoQuizTheme
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var trueButton : Button
+    private lateinit var falseButton : Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            GeoQuizTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+        setContentView(R.layout.activity_main)
+
+        trueButton = findViewById(R.id.true_button)
+        falseButton = findViewById(R.id.false_button)
+
+        trueButton.setOnClickListener { view: View ->
+            Toast.makeText(
+                this,
+                R.string.correct_toast,
+                Toast.LENGTH_SHORT
+            ).show()
         }
-    }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GeoQuizTheme {
-        Greeting("Android")
+        falseButton.setOnClickListener { view: View ->
+            Toast.makeText(
+                this,
+                R.string.incorrect_toast,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 }
