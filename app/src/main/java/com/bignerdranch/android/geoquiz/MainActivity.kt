@@ -1,22 +1,10 @@
 package com.bignerdranch.android.geoquiz
 
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.bignerdranch.android.geoquiz.databinding.ActivityMainBinding
 import com.bignerdranch.android.geoquiz.ui.Question
-import com.bignerdranch.android.geoquiz.ui.theme.GeoQuizTheme
 
 class MainActivity : ComponentActivity() {
 
@@ -34,17 +22,24 @@ class MainActivity : ComponentActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.trueButton.setOnClickListener { view: View ->
+        binding.trueButton.setOnClickListener {
             checkAnswer(true)
         }
 
-        binding.falseButton.setOnClickListener { view: View ->
+        binding.falseButton.setOnClickListener {
             checkAnswer(false)
         }
 
         binding.nextButton.setOnClickListener {
-            currentIndex = (currentIndex + 1) % questionBank.size
-            updateQuestion()
+            cycleQuestion()
+        }
+
+        binding.previousButton.setOnClickListener{
+            cycleQuestion(false)
+        }
+
+        binding.questionTextview.setOnClickListener {
+            cycleQuestion()
         }
         updateQuestion()
     }
@@ -52,6 +47,19 @@ class MainActivity : ComponentActivity() {
     private fun updateQuestion() {
         val questionTextResId = questionBank[currentIndex].textResId
         binding.questionTextview.setText(questionTextResId)
+    }
+
+    private fun cycleQuestion(forward : Boolean = true) {
+        currentIndex = if (forward) {
+            (currentIndex + 1) % questionBank.size
+        } else {
+            if (currentIndex == 0) {
+                questionBank.size - 1
+            } else {
+                (currentIndex - 1) % questionBank.size
+            }
+        }
+        updateQuestion()
     }
 
     private fun checkAnswer(userAnswer : Boolean) {
